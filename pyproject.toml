@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "formflet"
+version = "0.1.0"
+description = ""
+authors = ["David Córdoba <daviidco@hotmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+flet = "^0.21.2"
+pandas = "^2.2.1"
+openpyxl = "^3.1.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
