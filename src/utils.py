@@ -1,13 +1,17 @@
 import re
+
 import pandas as pd
+
 
 class DfEmptyException(Exception):
     """Exception raised when the DataFrame is empty or not uploaded."""
     pass
 
+
 class TemplateEmptyOrNoneException(Exception):
     """Exception raised when the template is empty or None."""
     pass
+
 
 def validate_dataframe(df):
     """
@@ -23,6 +27,7 @@ def validate_dataframe(df):
         raise DfEmptyException("No file uploaded.")
     if df.empty:
         raise DfEmptyException("File empty.")
+
 
 def format_message_base(original_message: str, data: pd.Series or pd.DataFrame):
     """
@@ -44,10 +49,11 @@ def format_message_base(original_message: str, data: pd.Series or pd.DataFrame):
     for var_name in variable_names:
         if isinstance(data, pd.DataFrame):
             var_value = data.loc[0, var_name]
-        else: # Asume que data es una serie (fila del DataFrame)
+        else:  # Asume que data es una serie (fila del DataFrame)
             var_value = data[var_name]
         result: str = result.replace('{' + var_name + '}', str(var_value))
     return result
+
 
 def format_preview_message(original_message: str, df: pd.DataFrame):
     """
@@ -65,6 +71,7 @@ def format_preview_message(original_message: str, df: pd.DataFrame):
     """
     validate_dataframe(df)
     return format_message_base(original_message, df)
+
 
 def format_message(row: pd.Series, original_message: str):
     """

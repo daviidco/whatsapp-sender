@@ -1,4 +1,5 @@
 import flet as ft
+
 from controlsFlet import WhatsSenderApp
 from database import create_connection, create_table, insert_templates, check_if_templates_exist
 from scripts_sql import sql_create_templates_table, sql_query_count_templates, \
@@ -30,5 +31,6 @@ def main(page: ft.Page):
     app = WhatsSenderApp(conn)
     page.add(app)
     page.update()
+
 
 ft.app(target=main)

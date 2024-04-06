@@ -1,7 +1,4 @@
-import time
-
 import flet as ft
-import numpy as np
 import pandas as pd
 from simpledt import DataFrame
 
@@ -26,7 +23,7 @@ class WhatsSenderApp(ft.UserControl):
         self.conn = conn
         self.templates = None
         self.txf_area_msg, self.txf_new_template, self.txf_result = self.create_text_fields()
-        (self.btn_sent, self.btn_schedule_sent, self.btn_new_template, 
+        (self.btn_sent, self.btn_schedule_sent, self.btn_new_template,
          self.btn_edit_template, self.btn_del_template, self.btn_prev_template) = self.create_icon_buttons()
         self.row_table = ft.Row(scroll=ft.ScrollMode.ALWAYS)
         self.selector_template = self.create_dropdown()
@@ -240,7 +237,6 @@ class WhatsSenderApp(ft.UserControl):
                 self.update()
                 return
 
-
             try:
                 check_login_whatsapp()
                 print("Sending messages...")
@@ -281,7 +277,6 @@ class WhatsSenderApp(ft.UserControl):
     def open_edit_dialog(self, e):
 
         if check_selector_template(self.selector_template):
-            
             confirm_dialog = ft.AlertDialog(
                 modal=True,
                 title=ft.Text("Please confirm"),
@@ -326,7 +321,6 @@ class WhatsSenderApp(ft.UserControl):
     def open_delete_dialog(self, e):
 
         if check_selector_template(self.selector_template):
-            
             confirm_dialog = ft.AlertDialog(
                 modal=True,
                 title=ft.Text("Please confirm"),
@@ -338,7 +332,7 @@ class WhatsSenderApp(ft.UserControl):
                 actions_alignment=ft.MainAxisAlignment.END,
                 on_dismiss=self.close_dialog,
             )
-            
+
             self.page.dialog = confirm_dialog
             confirm_dialog.open = True
             self.page.update()
@@ -354,6 +348,11 @@ class WhatsSenderApp(ft.UserControl):
             self.selector_template.value = None
             self.update()
         self.close_dialog(e)
+
+    def clear_template_fields(self):
+        self.txf_area_msg.value = None
+        self.txf_new_template.value = None
+        self.selector_template.value = None
 
     def close_dialog(self, e):
         self.page.dialog.open = False
@@ -381,7 +380,7 @@ class WhatsSenderApp(ft.UserControl):
                 on_dismiss=self.close_dialog,
 
             )
-            
+
             self.page.dialog = confirm_dialog
             confirm_dialog.open = True
             self.page.update()

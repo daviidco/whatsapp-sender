@@ -25,8 +25,6 @@ CREATE TABLE IF NOT EXISTS scheduled_messages (
 );
 """
 
-
 sql_query_count_templates = """SELECT count(*) FROM templates"""
 
 sql_query_all_templates = """SELECT * FROM templates ORDER BY template_name"""
-

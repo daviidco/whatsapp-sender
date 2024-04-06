@@ -13,6 +13,7 @@ def create_connection(db_file):
         print(e)
     return conn
 
+
 def create_table(conn, create_table_sql):
     try:
         c = conn.cursor()
@@ -39,6 +40,7 @@ def insert_templates(conn, templates):
         conn.commit()
     except Error as e:
         print(e)
+
 
 def get_templates_db(conn):
     try:
