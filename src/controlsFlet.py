@@ -112,7 +112,6 @@ class WhatsSenderApp(ft.UserControl):
             icon_color=ft.colors.RED,
             tooltip="Delete current template",
             on_click=self.open_delete_dialog,
-            # disabled=True
             opacity=40
         )
 
@@ -120,8 +119,7 @@ class WhatsSenderApp(ft.UserControl):
             icon=ft.icons.REMOVE_RED_EYE_ROUNDED,
             icon_color=ft.colors.AMBER_100,
             tooltip="Preview template with the first row from base",
-            on_click=self.open_preview_dialog,  # self.preview_template,
-            # disabled=True
+            on_click=self.open_preview_dialog
         )
         return btn_send, btn_schedule_sent, btn_new_template, btn_edit_template, btn_del_template, btn_prev_template
 
@@ -365,7 +363,7 @@ class WhatsSenderApp(ft.UserControl):
 
             confirm_dialog = ft.AlertDialog(
                 modal=True,
-                title=ft.Text("Please confirm"),
+                title=ft.Text("Preview message"),
                 content=ft.Text(
                     width=WIDTH_3_COL,
                     height=400,
@@ -421,8 +419,6 @@ class WhatsSenderApp(ft.UserControl):
                         controls=[
                             self.btn_download_sample,
                             self.btn_select_base,
-                            # self.btn_sent,
-                            # self.btn_schedule_sent,
                             ft.Container(content=self.selector_template),
                         ],
                         alignment=ft.MainAxisAlignment.SPACE_BETWEEN
