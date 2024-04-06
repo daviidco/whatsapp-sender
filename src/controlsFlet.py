@@ -341,9 +341,7 @@ class WhatsSenderApp(ft.UserControl):
         if option != None:
             delete_template_db(self.conn, self.selected_template[0])
             self.selector_template.options.remove(option)
-            self.txf_area_msg.value = None
-            self.txf_new_template.value = None
-            self.selector_template.value = None
+            self.clear_template_fields()
             self.update()
         self.close_dialog(e)
 
