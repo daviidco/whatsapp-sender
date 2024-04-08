@@ -1,3 +1,3 @@
 class NotLoggedInException(Exception):
-    """Excepción personalizada para indicar que el usuario no ha iniciado sesión en WhatsApp Web."""
+    """Custom exception to indicate that the user has not logged in to WhatsApp Web."""
     pass

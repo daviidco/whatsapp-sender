@@ -17,7 +17,7 @@ def validate_dataframe(df):
     """
     Validates that the DataFrame is not None and is not empty.
 
-    Parameters:
+    Args:
     df (pd.DataFrame): The DataFrame to validate.
 
     Raises:
@@ -33,7 +33,7 @@ def format_message_base(original_message: str, data: pd.Series or pd.DataFrame):
     """
     Base function to format a message by replacing placeholders with values.
 
-    Parameters:
+    Args:
     original_message (str): The original message with placeholders in curly braces.
     data (pd.Series or pd.DataFrame): The data to replace the placeholders.
 
@@ -59,7 +59,7 @@ def format_preview_message(original_message: str, df: pd.DataFrame):
     """
     Formats a message by replacing placeholders with values from the first row of a DataFrame.
 
-    Parameters:
+    Args:
     original_message (str): The original message with placeholders in curly braces.
     df (pd.DataFrame): The DataFrame containing the data to replace the placeholders.
 
@@ -77,7 +77,7 @@ def format_message(row: pd.Series, original_message: str):
     """
     Formats a message by replacing placeholders with values from a DataFrame row.
 
-    Parameters:
+    Args:
     row (pd.Series): The row from the DataFrame containing the data to replace the placeholders.
     original_message (str): The original message with placeholders in curly braces.
 

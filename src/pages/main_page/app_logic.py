@@ -7,7 +7,7 @@ from simpledt import DataFrame
 from constants_style import COLOR_GREEN
 from pages import utils
 from pages.handle_errors import DfEmptyException, TemplateEmptyOrNoneException
-from pages.main_page import validatios_ui
+from pages.main_page import validations_ui
 from paginated_dt import PaginatedDataTable
 from schemas.templates_schema import TemplateInsertSchema, TemplateUpdateSchema, TemplateSchema
 from service_whatsapp.handle_errors import NotLoggedInException
@@ -20,7 +20,7 @@ class AppLogicManager:
 
     def handle_dropdown_changed(self):
         """
-        Maneja el cambio en el dropdown seleccionado.
+        Handles the change in the selected dropdown.
         """
         selected_template_name = self.ui_manager.selector_template.value
         self.ui_manager.selected_template = self.find_template_by_name(selected_template_name)
@@ -30,17 +30,27 @@ class AppLogicManager:
             print("Template not found")
 
     def handle_download_sample(self):
+        """
+        Placeholder function for handling downloading samples.
+        """
         pass
 
     def handle_pick_file_result(self, e: ft.FilePickerResultEvent):
         """
-        Handles the result of the FilePicker, loading the selected file and updating the table.
+        Handles the result of the FilePicker, loads the selected file, and updates the table.
+
+
+
+        Args:
+
+            e (ft.FilePickerResultEvent): The event object containing information about the selected file.
+
         """
         if e.files:
             file_path = e.files[0].path
             self.ui_manager.df = pd.read_excel(file_path, dtype={'numero': str})
-            if not validatios_ui.check_upload_file(self.ui_manager.df, self.ui_manager.row_table,
-                                                   self.ui_manager.txf_result):
+            if not validations_ui.check_upload_file(self.ui_manager.df, self.ui_manager.row_table,
+                                                    self.ui_manager.txf_result):
                 return
 
             simpledt_df = DataFrame(self.ui_manager.df)
@@ -76,11 +86,14 @@ class AppLogicManager:
         )
 
     def handle_send_messages(self):
-        if validatios_ui.check_selector_template(self.ui_manager.selector_template):
+        """
+        Handles sending messages to selected recipients.
+        """
+        if validations_ui.check_selector_template(self.ui_manager.selector_template):
             print("Initializing service send messages...")
 
-            if not validatios_ui.check_upload_file(self.ui_manager.df, self.ui_manager.row_table,
-                                                   self.ui_manager.txf_result):
+            if not validations_ui.check_upload_file(self.ui_manager.df, self.ui_manager.row_table,
+                                                    self.ui_manager.txf_result):
                 return
 
             # Retrieve profiles from the Excel file
@@ -121,6 +134,9 @@ class AppLogicManager:
                 self.ui_manager.update()
 
     def handle_save_new_template(self):
+        """
+        Handles saving a new message template.
+        """
         print("new template")
         new_template = TemplateInsertSchema(template_name=self.ui_manager.txf_new_template.value,
                                             content=self.ui_manager.txf_area_msg.value)
@@ -133,12 +149,18 @@ class AppLogicManager:
         self.handle_dropdown_changed()
 
     def handle_open_edit_dialog(self):
-        if validatios_ui.check_selector_template(self.ui_manager.selector_template):
+        """
+        Handles opening the edit dialog for the selected template.
+        """
+        if validations_ui.check_selector_template(self.ui_manager.selector_template):
             self.ui_manager.page.dialog = self.ui_manager.confirm_edit_dialog
             self.ui_manager.confirm_edit_dialog.open = True
             self.ui_manager.page.update()
 
     def handle_update_template(self):
+        """
+        Handles updating an existing message template.
+        """
         print("update template")
         option = utils.find_option(self.ui_manager.selector_template, self.ui_manager.selector_template.value)
         if option is not None:
@@ -159,12 +181,18 @@ class AppLogicManager:
         self.handle_close_dialog()
 
     def handle_open_delete_dialog(self):
-        if validatios_ui.check_selector_template(self.ui_manager.selector_template):
+        """
+        Handles opening the delete dialog for the selected template.
+        """
+        if validations_ui.check_selector_template(self.ui_manager.selector_template):
             self.ui_manager.page.dialog = self.ui_manager.confirm_delete_dialog
             self.ui_manager.confirm_delete_dialog.open = True
             self.ui_manager.page.update()
 
     def handle_delete_template(self):
+        """
+        Handles deleting an existing message template.
+        """
         print("Delete template")
         option = utils.find_option(self.ui_manager.selector_template, self.ui_manager.selector_template.value)
         if option is not None:
@@ -177,13 +205,17 @@ class AppLogicManager:
         self.handle_close_dialog()
 
     def handle_open_preview_dialog(self):
-        # if not validatios_ui.check_selector_template(self.ui_manager.selector_template):
-        #     return
-        # if not validatios_ui.check_upload_file(self.ui_manager.df, self.ui_manager.row_table, self.ui_manager.txf_result):
-        #     return
-        # if not validatios_ui.check_df_uploaded(self.ui_manager.df, self.ui_manager.row_table,
-        #                                        self.ui_manager.txf_result):
-        #    return
+        """
+        Handles opening the preview dialog for the selected template.
+        """
+        if not validations_ui.check_selector_template(self.ui_manager.selector_template):
+            return
+        if not validations_ui.check_upload_file(self.ui_manager.df, self.ui_manager.row_table,
+                                                self.ui_manager.txf_result):
+            return
+        if not validations_ui.check_df_uploaded(self.ui_manager.df, self.ui_manager.row_table,
+                                                self.ui_manager.txf_result):
+            return
         message_formatted = self.generate_preview_template()
         self.ui_manager.confirm_preview_dialog.content.value = message_formatted
         self.ui_manager.confirm_preview_dialog.open = True
@@ -191,13 +223,27 @@ class AppLogicManager:
         self.ui_manager.page.update()
 
     def handle_close_dialog(self):
+        """
+        Handles closing the currently opened dialog.
+        """
         self.ui_manager.page.dialog.open = False
         self.ui_manager.page.update()
 
-
     def find_template_by_name(self, template_name) -> Optional[TemplateSchema]:
         """
-        Busca una plantilla por su nombre.
+        Finds a template by its name.
+
+
+        Args:
+
+            template_name (str): The name of the template to search for.
+
+
+
+        Returns:
+
+            Optional[TemplateSchema]: The TemplateSchema object if found, else None.
+
         """
         template = next(
             (template for template in self.ui_manager.templates if template[1] == template_name),
@@ -210,7 +256,11 @@ class AppLogicManager:
 
     def update_ui_with_selected_template(self, template: TemplateSchema):
         """
-        Actualiza la interfaz de usuario con la plantilla seleccionada.
+        Updates the user interface with the selected template.
+
+        Args:
+
+            template (TemplateSchema): The TemplateSchema object representing the selected template.
         """
         text_template = template.content
         self.ui_manager.txf_area_msg.value = f"{text_template}"
@@ -219,6 +269,12 @@ class AppLogicManager:
         self.ui_manager.update()
 
     def generate_preview_template(self):
+        """
+        Generates a preview of the message based on the template and the uploaded DataFrame.
+
+        Returns:
+            str: The formatted preview message.
+        """
         try:
             message_formatted = utils.format_preview_message(self.ui_manager.txf_area_msg.value, self.ui_manager.df)
             return message_formatted
@@ -232,11 +288,19 @@ class AppLogicManager:
         """
         Resets the value of specified template fields to None.
 
-        Parameters:
-        fields_to_reset (list): A list of controls ft to reset.
+        Args:
+
+            controls (list): A list of controls to reset.
+
         """
         for control in controls:
             control.value = None
 
     def get_templates(self):
+        """
+        Retrieves all templates from the template repository.
+
+        Returns:
+            list: A list of TemplateSchema objects representing the templates.
+        """
         return self.ui_manager.template_repository.get_templates_db()

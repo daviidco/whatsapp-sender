@@ -15,24 +15,39 @@ class UIComponentManager(ft.UserControl):
         Initialize the UIComponentManager with a database connection.
 
         Args:
-            conn: Database connection object.
+            template_repository (TemplateRepository): The template repository object.
         """
         super().__init__()
         self.template_repository = template_repository
 
+        # Initialize the app logic manager
         self.app_logic_manager = AppLogicManager(self)
 
+        # Create the text fields for the application
         self.create_text_fields()
+
+        # Create the icon buttons for the application
         self.create_icon_buttons()
+
+        # Create the dropdown for selecting templates
         self.create_dropdown()
+
+        # Create the row table with scrolling mode set to ALWAYS
         self.row_table = ft.Row(scroll=ft.ScrollMode.ALWAYS)
+
+        # Create the buttons for the application
         self.create_buttons()
+
+        # Create the dialogs for the application
         self.create_dialogs()
+
+        # Initialize the file picker with the pick file result event handler
         self.file_picker = ft.FilePicker(on_result=self.pick_file_result)
 
+        # Set the dataframe to None
         self.df = None
 
-    def create_text_fields(self):
+    def create_text_fields(self) -> None:
         """
         Creates the text fields for the application.
         """
@@ -55,7 +70,7 @@ class UIComponentManager(ft.UserControl):
             read_only=True,
         )
 
-    def create_icon_buttons(self):
+    def create_icon_buttons(self) -> None:
         """
         Creates the icon buttons for the application.
         """
@@ -114,7 +129,7 @@ class UIComponentManager(ft.UserControl):
             on_click=self.open_preview_dialog
         )
 
-    def create_dropdown(self):
+    def create_dropdown(self) -> None:
         """
         Creates the dropdown for selecting templates.
         """
@@ -127,7 +142,7 @@ class UIComponentManager(ft.UserControl):
             options=[ft.dropdown.Option(name) for name in template_names],
         )
 
-    def create_buttons(self):
+    def create_buttons(self) -> None:
         """
         Creates the buttons for the application.
         """
@@ -140,7 +155,7 @@ class UIComponentManager(ft.UserControl):
             on_click=self.pick_file
         )
 
-    def create_dialogs(self):
+    def create_dialogs(self) -> None:
         self.confirm_edit_dialog = ft.AlertDialog(
             modal=True,
             title=ft.Text("Please confirm"),
@@ -203,11 +218,12 @@ class UIComponentManager(ft.UserControl):
 
     def pick_file_result(self, e):
         """
-        Handles the result of the FilePicker, loading the selected file and updating the table.
+        Handles the result of the FilePicker by loading the selected file and updating the table.
 
         Args:
-            e: FilePickerResultEvent object.
+            e: FilePickerResultEvent object representing the selected file.
         """
+        # Delegates the handling of the picked file result to the AppLogicManager
         self.app_logic_manager.handle_pick_file_result(e)
 
     def pick_file(self, e):
@@ -255,14 +271,6 @@ class UIComponentManager(ft.UserControl):
         """
         self.app_logic_manager.handle_update_template()
 
-    # def find_option(self, option_name):
-    #     """
-    #     Handles the event of finding an option.
-    #
-    #     Args:
-    #         option_name: Name of the option to find.
-    #     """
-    #     self.app_logic_manager.handle_find_option(option_name)
 
     def open_delete_dialog(self, e):
         """
@@ -301,6 +309,7 @@ class UIComponentManager(ft.UserControl):
         Returns:
             A Container object representing the application's UI.
         """
+        # Create a Container with specified properties
         return ft.Container(
             width=1410,
             bgcolor=ft.colors.BLACK,
@@ -308,16 +317,7 @@ class UIComponentManager(ft.UserControl):
             padding=20,
             content=ft.Column(
                 controls=[
-                    # ft.Row(controls=[ft.TextField(
-                    #     value="Instructions: \n"
-                    #           "1. Login at https://web.whatsapp.com/ \n"
-                    #           "2. Upload your base xlsx with the correct format \n"
-                    #           "3. Clic at sent messages ▶",
-                    #     width=800,
-                    #     multiline=True,
-                    #     max_lines=20,
-                    #
-                    # )]),
+                    # Row 1 with download button, base selection button, and template selector
                     ft.Row(
                         controls=[
                             self.btn_download_sample,
@@ -326,15 +326,16 @@ class UIComponentManager(ft.UserControl):
                         ],
                         alignment=ft.MainAxisAlignment.SPACE_BETWEEN
                     ),
+                    # Row 2 with result text field and table view
                     ft.Row(
                         controls=[
                             ft.Column(controls=[self.txf_result,
                                                 ft.ListView(controls=[self.row_table])], expand=1),
 
+                            # Column with message field, new template field, and template control buttons
                             ft.Column(
                                 controls=[
                                     ft.Row(controls=[ft.Container(content=self.txf_area_msg), ]),
-                                    # , margin=ft.margin.only(left=60)),
                                     ft.Row(controls=[self.txf_new_template, ]),
                                     ft.Row(controls=[
                                         ft.Container(
@@ -353,14 +354,13 @@ class UIComponentManager(ft.UserControl):
                             )
                         ],
                         height=500,  # Set a fixed height for the row
-
                     ),
+                    # Row 3 with scheduled send button and send button
                     ft.Row(controls=[
                         self.btn_schedule_sent,
                         self.btn_send,
                     ],
                         alignment=ft.MainAxisAlignment.CENTER)
-
                 ],
             ),
         )

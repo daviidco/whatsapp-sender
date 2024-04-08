@@ -4,51 +4,55 @@ from sqlite3 import Error
 
 class Database:
     """
-    Clase para manejar la conexión a la base de datos SQLite.
+    Class to handle the connection to the SQLite database.
     """
 
-    def __init__(self, db_file):
+    def __init__(self, db_file) -> None:
         """
-        Inicializa la conexión a la base de datos.
+        Initializes the connection to the database.
 
         Args:
-            db_file (str): Ruta al archivo de la base de datos.
+            db_file (str): Path to the database file.
         """
+        # Create a connection to the database
         self.connection = self.create_connection(db_file)
+
+        # Create a cursor for the connection
         self.cursor = self.connection.cursor()
 
-    def create_connection(self, db_file):
+    def create_connection(self, db_file) -> sqlite3.Connection:
         """
-        Crea una conexión a la base de datos SQLite.
+        Creates a connection to the SQLite database.
 
         Args:
-            db_file (str): Ruta al archivo de la base de datos.
+            db_file (str): Path to the database file.
 
         Returns:
-            sqlite3.Connection: Objeto de conexión a la base de datos.
+            sqlite3.Connection: Connection object to the database.
         """
         conn = None
         try:
             conn = sqlite3.connect(db_file)
             return conn
         except Error as e:
+            # Print the error message if connection fails
             print(e)
         return conn
 
-    def create_table(self, create_table_sql):
+    def create_table(self, create_table_sql) -> None:
         """
-        Crea una tabla en la base de datos.
+        Creates a table in the database.
 
         Args:
-            create_table_sql (str): Sentencia SQL para crear la tabla.
+            create_table_sql (str): SQL statement to create the table.
         """
         try:
             self.cursor.execute(create_table_sql)
         except Error as e:
             print(e)
 
-    def close(self):
+    def close(self) -> None:
         """
-        Cierra la conexión a la base de datos.
+        Closes the active connection to the SQLite database.
         """
         self.connection.close()
