@@ -1,35 +1,44 @@
 import flet as ft
 
-from controlsFlet import WhatsSenderApp
-from database import create_connection, create_table, insert_templates, check_if_templates_exist
-from scripts_sql import sql_create_templates_table, sql_query_count_templates, \
-    sql_create_sent_messages_table, sql_create_scheduled_messages_table
-from seed_templates import templates
+from database.conection import Database
+from database.repositories.template_reporitory import TemplateRepository
+from database.scripts_sql import sql_create_templates_table, sql_create_sent_messages_table, \
+    sql_create_scheduled_messages_table
+from pages.main_page.app_ui import UIComponentManager
 
 
 def main(page: ft.Page):
     """
     Main function that initializes and runs the application.
+
+    Args:
+        page (ft.Page): The page object to display the UI.
     """
+    # Initialize the database
     database = 'whatsapp-sender.db'
+    db = Database(database)
+    template_repository = TemplateRepository(db)
 
-    conn = create_connection(database)
+    # Create necessary tables if the database connection is established
+    if db.connection is not None:
+        db.create_table(sql_create_templates_table)
+        db.create_table(sql_create_sent_messages_table)
+        db.create_table(sql_create_scheduled_messages_table)
 
-    # create tables
-    if conn is not None:
-        # create templates table
-        create_table(conn, sql_create_templates_table)
-        create_table(conn, sql_create_sent_messages_table)
-        create_table(conn, sql_create_scheduled_messages_table)
-
-        if not check_if_templates_exist(conn, sql_query_count_templates):
-            insert_templates(conn, templates)
+        # Insert templates if they don't exist in the database
+        if not template_repository.check_if_templates_exist():
+            template_repository.insert_templates()
     else:
-        print("Error! cannot create the database connection.")
+        print("Error! Cannot create the database connection.")
 
+    # Set the page title
     page.title = "Whatsapp Sender"
-    app = WhatsSenderApp(conn)
+
+    # Initialize the UI component manager and add it to the page
+    app = UIComponentManager(template_repository)
     page.add(app)
+
+    # Update the page to display the changes
     page.update()
 
 
