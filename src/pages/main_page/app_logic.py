@@ -4,7 +4,7 @@ import flet as ft
 import pandas as pd
 from simpledt import DataFrame
 
-from constants_style import COLOR_GREEN
+from pages.constants_style import COLOR_GREEN
 from pages import utils
 from pages.handle_errors import DfEmptyException, TemplateEmptyOrNoneException
 from pages.main_page import validations_ui
