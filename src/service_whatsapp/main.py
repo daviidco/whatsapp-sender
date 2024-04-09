@@ -51,8 +51,4 @@ def send_whatsapp_message(phone: str, message: str) -> None:
     # Send the message instantly using PyWhatKit
     kit.sendwhatmsg_instantly(phone_number, message)
     time.sleep(1)
-    pg.click(x=1000, y=960)  # Adjust the coordinates based on your screen
-    time.sleep(1)
-    pg.press("Enter")
-    time.sleep(1)
     pg.hotkey('ctrl', 'w')
