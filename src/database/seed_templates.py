@@ -1,29 +1,29 @@
 templates = [
-    ('Nuevos', """Hola {0}   👋🏼 
-En BODYTECH eres importante para nosotros por eso queremos premiar tu lealtad con una tarifa exclusiva sólo para ti.
+    ('Nuevos Clientes', """Hola {nombre} 👋🏼 
+En [Tu Empresa], valoramos tu interés en nuestros servicios y nos gustaría darte una cálida bienvenida.
 
-Renueva tu PLAN ANUAL y llévate 2 meses adicionales.
+Tenemos ofertas especiales diseñadas especialmente para nuevos clientes como tú. ¡Contáctanos para obtener más información!
 
-Asesora comercial: Paola Obando 👩🏻‍💻
-Sede: Pasto
+Representante de Ventas: [Nombre del Representante de Ventas] 👩🏻‍💼
+Ubicación: [Ciudad, Estado]
 
-Envíame un mensaje y agendamos una cita 🫱🏼‍🫲🏽"""),
-    ('Renovados', """Hola {0}   👋🏼 
-En BODYTECH eres importante para nosotros por eso queremos premiar tu lealtad con una tarifa exclusiva sólo para ti.
+Envíanos un mensaje y programemos una consulta 📅"""),
+    ('Renovaciones de Suscripciones', """Hola {nombre} 👋🏼 
+En [Tu Empresa], apreciamos tu lealtad a nuestros servicios. Como muestra de nuestro agradecimiento, ofrecemos descuentos especiales para renovaciones.
 
-Renueva tu PLAN ANUAL y llévate 2 meses adicionales.
+Renueva tu suscripción hoy y disfruta de beneficios exclusivos. ¡Contáctanos para obtener más información!
 
-Asesora comercial: Paola Obando 👩🏻‍💻
-Sede: Pasto
+Representante de Ventas: [Nombre del Representante de Ventas] 👩🏻‍💼
+Ubicación: [Ciudad, Estado]
 
-Envíame un mensaje y agendamos una cita 🫱🏼‍🫲🏽"""),
-    ('Recuperados', """"Hola {0}   👋🏼 
-En BODYTECH eres importante para nosotros por eso queremos premiar tu lealtad con una tarifa exclusiva sólo para ti.
+Envíanos un mensaje y programemos una consulta 📅"""),
+    ('Clientes Recuperados', """Hola {nombre} 👋🏼 
+En [Tu Empresa], entendemos la importancia de tu negocio y estamos encantados de tenerte de vuelta.
 
-Renueva tu PLAN ANUAL y llévate 2 meses adicionales.
+Tenemos ofertas exclusivas diseñadas para mejorar tu experiencia. ¡Contáctanos para obtener más información!
 
-Asesora comercial: Paola Obando 👩🏻‍💻
-Sede: Pasto
+Representante de Ventas: [Nombre del Representante de Ventas] 👩🏻‍💼
+Ubicación: [Ciudad, Estado]
 
-Envíame un mensaje y agendamos una cita 🫱🏼‍🫲🏽""")
+Envíanos un mensaje y programemos una consulta 📅""")
 ]
