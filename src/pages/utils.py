@@ -49,8 +49,8 @@ def format_message_base(original_message: str, data: pd.Series or pd.DataFrame):
     placeholders = re.findall(r'\{([^}]+)\}', original_message)
     variable_names = [var.strip() for var in placeholders]
     for var_name in variable_names:
-        if var_name in data.columns:
-            var_value = data.loc[0, var_name]
+        if var_name in data.index:
+            var_value = data[var_name]
             result = result.replace('{' + var_name + '}', str(var_value))
         else:
             if var_name in data.index:
