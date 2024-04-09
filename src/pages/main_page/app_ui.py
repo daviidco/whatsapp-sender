@@ -70,6 +70,11 @@ class UIComponentManager(ft.UserControl):
             read_only=True,
         )
 
+        self.txf_result_op = ft.TextField(
+            read_only=True,
+            width=WIDTH_3_COL,
+        )
+
     def create_icon_buttons(self) -> None:
         """
         Creates the icon buttons for the application.
@@ -271,7 +276,6 @@ class UIComponentManager(ft.UserControl):
         """
         self.app_logic_manager.handle_update_template()
 
-
     def open_delete_dialog(self, e):
         """
         Handles the event of opening the delete dialog.
@@ -357,10 +361,19 @@ class UIComponentManager(ft.UserControl):
                     ),
                     # Row 3 with scheduled send button and send button
                     ft.Row(controls=[
-                        self.btn_schedule_sent,
-                        self.btn_send,
+                        ft.Row(controls=[
+                                self.btn_schedule_sent,
+                                self.btn_send],
+                            expand=1,
+                            alignment=ft.MainAxisAlignment.CENTER),
+                        ft.Container(
+                                content=ft.Row(controls=[
+                                    self.txf_result_op],
+                                alignment=ft.MainAxisAlignment.END,
+                            )
+                        )
                     ],
-                        alignment=ft.MainAxisAlignment.CENTER)
+                    )
                 ],
             ),
         )

@@ -89,49 +89,60 @@ class AppLogicManager:
         """
         Handles sending messages to selected recipients.
         """
-        if validations_ui.check_selector_template(self.ui_manager.selector_template):
-            print("Initializing service send messages...")
+        if not validations_ui.check_selector_template(self.ui_manager.selector_template):
+            return
 
-            if not validations_ui.check_upload_file(self.ui_manager.df, self.ui_manager.row_table,
-                                                    self.ui_manager.txf_result):
-                return
+        if not validations_ui.check_upload_file(self.ui_manager.df, self.ui_manager.row_table,
+                                                self.ui_manager.txf_result):
+            return
 
-            # Retrieve profiles from the Excel file
-            try:
-                self.ui_manager.df['formatted_message'] = self.ui_manager.df.apply(
-                    lambda row: utils.format_message(row, self.ui_manager.txf_area_msg.value),
-                    axis=1)
-            except Exception as e:
-                self.ui_manager.txf_result.value = f"Error formatting messages: {e}"
-                self.ui_manager.txf_result.bgcolor = ft.colors.RED
-                self.ui_manager.txf_result.color = ft.colors.WHITE
-                self.ui_manager.update()
-                return
+        print("Initializing service send messages...")
 
-            try:
-                check_login_whatsapp()
-                print("Sending messages...")
+        try:
+            self.ui_manager.df['formatted_message'] = self.ui_manager.df.apply(
+                lambda row: utils.format_message(row, self.ui_manager.txf_area_msg.value),
+                axis=1)
+        except Exception as e:
+            error_message = f"Error formatting messages: {e}"
+            self.ui_manager.txf_result.value = error_message
+            self.ui_manager.txf_result.bgcolor = ft.colors.RED
+            self.ui_manager.txf_result.color = ft.colors.WHITE
+            self.ui_manager.update()
+            return
 
-                # Iterate through each profile and send personalized messages
-                for index, recipient in self.ui_manager.df.iterrows():
-                    try:
-                        print(f"Messages [{self.ui_manager.df.shape[0]}]...")
+        try:
+            check_login_whatsapp()
+            print("Sending messages...")
+            messages_sent = 0
 
-                        send_whatsapp_message(phone=recipient['numero'],
-                                              message=recipient['formatted_message'])
+            for index, recipient in self.ui_manager.df.iterrows():
+                try:
+                    print(f"Messages [{self.ui_manager.df.shape[0]}]...")
+                    send_whatsapp_message(phone=recipient['numero'],
+                                          message=recipient['formatted_message'])
+                    messages_sent += 1
+                    print(f"Message {index} sent [Ok]...")
+                except Exception as e:
+                    print(f"Error sending message to {recipient['numero']}: {str(e)}")
+                    self.ui_manager.txf_result_op.value = f"Error with message to {recipient['numero']}."
+                    self.ui_manager.txf_result_op.bgcolor = ft.colors.RED
+                    self.ui_manager.txf_result_op.color = ft.colors.WHITE
+                    self.ui_manager.update()
+                    return
 
-                        print(f"Message {index} sent [Ok]...")
+            self.ui_manager.txf_result_op.value = f"Messages sent successfully. [{messages_sent}]"
+            self.ui_manager.txf_result_op.bgcolor = ft.colors.LIGHT_GREEN
+            self.ui_manager.txf_result_op.color = ft.colors.WHITE
+            self.ui_manager.update()
+            print("End Service Sent messages... ")
 
-                    except Exception as e:
-                        print(f"Error sending message to {recipient['numero']}: {str(e)}")
-                print("End Service Sent messages... ")
 
-            except NotLoggedInException as e:
-                self.ui_manager.txf_result.value = ("Error trying sent messages. "
-                                                    "Please verify you are login in https://web.whatsapp.com")
-                self.ui_manager.txf_result.bgcolor = ft.colors.RED
-                self.ui_manager.txf_result.color = ft.colors.WHITE
-                self.ui_manager.update()
+        except NotLoggedInException as e:
+            error_message = "Error trying sent messages. Please verify you are logged in at https://web.whatsapp.com"
+            self.ui_manager.txf_result.value = error_message
+            self.ui_manager.txf_result.bgcolor = ft.colors.RED
+            self.ui_manager.txf_result.color = ft.colors.WHITE
+            self.ui_manager.update()
 
     def handle_save_new_template(self):
         """
@@ -161,7 +172,7 @@ class AppLogicManager:
         """
         Handles updating an existing message template.
         """
-        print("update template")
+        print("Update template")
         option = utils.find_option(self.ui_manager.selector_template, self.ui_manager.selector_template.value)
         if option is not None:
             old_template = TemplateUpdateSchema(id=self.ui_manager.selected_template.id,
@@ -169,7 +180,7 @@ class AppLogicManager:
                                                 content=self.ui_manager.txf_area_msg.value)
             self.ui_manager.template_repository.update_template_db(old_template)
 
-            print("updated at db")
+            print("Template updated at db")
 
             self.ui_manager.selector_template.options.remove(option)
             self.ui_manager.selector_template.options.append(ft.dropdown.Option(self.ui_manager.txf_new_template.value))
@@ -177,7 +188,6 @@ class AppLogicManager:
             self.ui_manager.update()
             self.ui_manager.templates = self.ui_manager.template_repository.get_templates_db()
             self.handle_dropdown_changed()
-            print("updated at app")
         self.handle_close_dialog()
 
     def handle_open_delete_dialog(self):
