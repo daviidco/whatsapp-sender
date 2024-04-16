@@ -1,3 +1,5 @@
+import os
+import shutil
 from typing import Optional
 
 import flet as ft
@@ -29,11 +31,28 @@ class AppLogicManager:
         else:
             print("Template not found")
 
-    def handle_download_sample(self):
+    def handle_download_sample(self, e: ft.FilePickerResultEvent):
         """
         Placeholder function for handling downloading samples.
         """
-        pass
+        relative_source_file_path = '../../sample.xlsx'
+        destination_file_path = e.path
+
+        # Get the path of the directory where the script is located
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        # Construct the absolute path of the source file based on the relative path
+        source_file_path = os.path.join(script_dir, relative_source_file_path)
+
+        try:
+            # Attempt to copy the file
+            shutil.copy(source_file_path, destination_file_path)
+            print("File copied successfully.")
+        except FileNotFoundError:
+            print("Error: The source file was not found.")
+        except PermissionError:
+            print("Error: Permission denied.")
+        except Exception as ex:
+            print("Error occurred while copying the file.")
 
     def handle_pick_file_result(self, e: ft.FilePickerResultEvent):
         """

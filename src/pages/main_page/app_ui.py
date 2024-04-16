@@ -43,6 +43,7 @@ class UIComponentManager(ft.UserControl):
 
         # Initialize the file picker with the pick file result event handler
         self.file_picker = ft.FilePicker(on_result=self.pick_file_result)
+        self.saveme = ft.FilePicker(on_result=self.download_sample)
 
         # Set the dataframe to None
         self.df = None
@@ -153,7 +154,7 @@ class UIComponentManager(ft.UserControl):
         """
         self.btn_download_sample = ft.ElevatedButton(text="Download Sample",
                                                      icon="DOWNLOAD_FOR_OFFLINE",
-                                                     on_click=self.download_sample)
+                                                     on_click=lambda _: self.saveme.save_file(file_name="sample.xlsx"))
         self.btn_select_base = ft.ElevatedButton(
             text="Choose the base to send",
             icon=ft.icons.UPLOAD_FILE,
@@ -212,14 +213,14 @@ class UIComponentManager(ft.UserControl):
         """
         self.app_logic_manager.handle_dropdown_changed()
 
-    def download_sample(self, e):
+    def download_sample(self, e: ft.FilePickerResultEvent):
         """
         Implements the logic for downloading the sample.
 
         Args:
             e: Event object.
         """
-        self.app_logic_manager.handle_download_sample()
+        self.app_logic_manager.handle_download_sample(e)
 
     def pick_file_result(self, e):
         """
@@ -305,6 +306,10 @@ class UIComponentManager(ft.UserControl):
 
     def close_dialog(self, e):
         self.app_logic_manager.handle_close_dialog()
+
+    def did_mount(self):
+        self.page.overlay.append(self.saveme)
+        self.page.update()
 
     def build(self):
         """
