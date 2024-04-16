@@ -31,7 +31,7 @@ def validate_dataframe(df):
         raise DfEmptyException("File empty.")
 
 
-def format_message_base(original_message: str, data: pd.Series or pd.DataFrame):
+def format_message_base(original_message: str, data: pd.Series):
     """
     Base function to format a message by replacing placeholders with values.
 
@@ -74,7 +74,8 @@ def format_preview_message(original_message: str, df: pd.DataFrame):
     DfEmptyException: If the DataFrame is empty or not uploaded.
     """
     validate_dataframe(df)
-    return format_message_base(original_message, df)
+    first_row = df.iloc[0]
+    return format_message_base(original_message, first_row)
 
 
 def format_message(row: pd.Series, original_message: str):
