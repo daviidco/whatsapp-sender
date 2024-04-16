@@ -148,16 +148,21 @@ class AppLogicManager:
         """
         Handles saving a new message template.
         """
-        print("new template")
+        print("New template")
         new_template = TemplateInsertSchema(template_name=self.ui_manager.txf_new_template.value,
                                             content=self.ui_manager.txf_area_msg.value)
-        self.ui_manager.template_repository.save_template_db(new_template)
+        success = self.ui_manager.template_repository.save_template_db(new_template)
 
-        self.ui_manager.selector_template.options.append(ft.dropdown.Option(self.ui_manager.txf_new_template.value))
-        self.ui_manager.selector_template.value = self.ui_manager.txf_new_template.value
-        self.ui_manager.update()
-        self.ui_manager.templates = self.ui_manager.template_repository.get_templates_db()
-        self.handle_dropdown_changed()
+        if success:
+            self.ui_manager.selector_template.options.append(ft.dropdown.Option(self.ui_manager.txf_new_template.value))
+            self.ui_manager.selector_template.value = self.ui_manager.txf_new_template.value
+            self.ui_manager.update()
+            self.ui_manager.templates = self.ui_manager.template_repository.get_templates_db()
+            self.handle_dropdown_changed()
+        else:
+            # Handle the case where the template name already exists
+            self.ui_manager.txf_new_template.error_text = "Name template exists. Please change it."
+            self.ui_manager.update()
 
     def handle_open_edit_dialog(self):
         """

@@ -1,3 +1,4 @@
+import sqlite3
 from sqlite3 import Error
 
 from database.scripts_sql import sql_query_all_templates
@@ -59,8 +60,12 @@ class TemplateRepository:
             template_tuple = (template.template_name, template.content)
             cursor.execute("INSERT INTO templates (template_name, content) VALUES (?, ?)", template_tuple)
             self.db.connection.commit()
-        except Error as e:
+            return True
+        except sqlite3.IntegrityError as e:
+            return False
+        except sqlite3.Error as e:
             print(e)
+            return False
 
     def update_template_db(self, template):
         try:
