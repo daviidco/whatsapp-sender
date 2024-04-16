@@ -1,29 +1,30 @@
 templates = [
-    ('Nuevos Clientes', """Hola {nombre} 👋🏼 
-En [Tu Empresa], valoramos tu interés en nuestros servicios y nos gustaría darte una cálida bienvenida.
+    ('Nuevos Clientes', """👋 Hola {nombre},
 
-Tenemos ofertas especiales diseñadas especialmente para nuevos clientes como tú. ¡Contáctanos para obtener más información!
+Espero que este mensaje te encuentre bien. 😊 Quería informarte que tu dirección registrada es {direccion} y que tienes {años} años.
 
-Representante de Ventas: [Nombre del Representante de Ventas] 👩🏻‍💼
-Ubicación: [Ciudad, Estado]
+📍 Tu dirección registrada es: {direccion}
+📚 Tienes {años} años de experiencia en tu campo.
 
-Envíanos un mensaje y programemos una consulta 📅"""),
-    ('Renovaciones de Suscripciones', """Hola {nombre} 👋🏼 
-En [Tu Empresa], apreciamos tu lealtad a nuestros servicios. Como muestra de nuestro agradecimiento, ofrecemos descuentos especiales para renovaciones.
+📧 Para cualquier consulta, no dudes en contactarnos.
 
-Renueva tu suscripción hoy y disfruta de beneficios exclusivos. ¡Contáctanos para obtener más información!
+🌟 Saludos,
+🤖 Tu Asistente Personal"""),
+    ('Renovaciones de Suscripciones', """💪 Hola {nombre},
 
-Representante de Ventas: [Nombre del Representante de Ventas] 👩🏻‍💼
-Ubicación: [Ciudad, Estado]
+¡Esperamos que estés disfrutando de tu entrenamiento! 🏋️‍♂️ Queríamos recordarte que, por tu permanencia de {años} años, te haremos llegar un regalo especial a tu dirección {direccion}. 🎁 Es nuestra pequeña forma de agradecerte por ser parte de nuestra familia.
 
-Envíanos un mensaje y programemos una consulta 📅"""),
-    ('Clientes Recuperados', """Hola {nombre} 👋🏼 
-En [Tu Empresa], entendemos la importancia de tu negocio y estamos encantados de tenerte de vuelta.
+🔄 Si tienes alguna pregunta o necesitas más información, no dudes en responder a este mensaje.
 
-Tenemos ofertas exclusivas diseñadas para mejorar tu experiencia. ¡Contáctanos para obtener más información!
+🌟 Saludos,
+🤖 Tu Asistente de Fitness"""),
 
-Representante de Ventas: [Nombre del Representante de Ventas] 👩🏻‍💼
-Ubicación: [Ciudad, Estado]
+    ('Clientes Recuperados', """👋 Hola {nombre},
 
-Envíanos un mensaje y programemos una consulta 📅""")
+Hace {años} años que no te haces una revisión. 😊 Queríamos recordarte que, como parte de nuestro compromiso con tu salud, te ofrecemos un test cero gratis en tu casa, ubicada en {direccion}.
+
+🔄 Si tienes alguna pregunta o necesitas más información, no dudes en responder a este mensaje.
+
+🌟 Saludos,
+🤖 Tu Asistente de Salud""")
 ]
