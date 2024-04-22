@@ -1,4 +1,5 @@
-# WhatsApp-Sender
+# WhatsApp-Sender 
+<img src="src/assets/logo.png" width="100" height="100">
 
 Automation of WhatsApp message sending with PyWhatKit
 
