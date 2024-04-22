@@ -37,6 +37,8 @@ def main(page: ft.Page):
 
     # Set the page title
     page.title = "Whatsapp Sender"
+    #page.bgcolor = ft.colors.BLACK
+    page.theme_mode = ft.ThemeMode.DARK
 
     # Initialize the UI component manager and add it to the page
     app = UIComponentManager(template_repository)
