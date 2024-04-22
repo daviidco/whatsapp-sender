@@ -36,13 +36,16 @@ class AppLogicManager:
         """
         Placeholder function for handling downloading samples.
         """
-        relative_source_file_path = '../../sample.xlsx'
+        relative_source_file_path = 'sample.xlsx'
         destination_file_path = e.path
 
         # Get the path of the directory where the script is located
         script_dir = os.path.dirname(os.path.abspath(__file__))
         # Construct the absolute path of the source file based on the relative path
         source_file_path = os.path.join(script_dir, relative_source_file_path)
+
+        current_dir = os.getcwd()
+        source_file_path = os.path.join(current_dir, 'sample.xlsx')
 
         try:
             # Attempt to copy the file
@@ -91,19 +94,6 @@ class AppLogicManager:
             self.ui_manager.txf_result.bgcolor = ft.colors.LIGHT_GREEN
             self.ui_manager.txf_result.color = ft.colors.BLACK
             self.ui_manager.update()
-
-    def handle_pick_file(self):
-        """
-        Opens the FilePicker to select the database base.
-        """
-        # Add the FilePicker to the page overlay just before opening it
-        self.ui_manager.page.overlay.append(self.ui_manager.file_picker)
-        self.ui_manager.page.update()
-        # Now open the FilePicker
-        self.ui_manager.file_picker.pick_files(
-            allow_multiple=False,
-            allowed_extensions=["xlsx"]
-        )
 
     def handle_send_messages(self):
         """

@@ -158,7 +158,7 @@ class UIComponentManager(ft.UserControl):
         self.btn_select_base = ft.ElevatedButton(
             text="Choose the base to send",
             icon=ft.icons.UPLOAD_FILE,
-            on_click=self.pick_file
+            on_click=lambda _: self.file_picker.pick_files(allow_multiple=False, allowed_extensions=["xlsx"])
         )
 
     def create_dialogs(self) -> None:
@@ -232,15 +232,6 @@ class UIComponentManager(ft.UserControl):
         # Delegates the handling of the picked file result to the AppLogicManager
         self.app_logic_manager.handle_pick_file_result(e)
 
-    def pick_file(self, e):
-        """
-        Opens the FilePicker to select the database base.
-
-        Args:
-            e: Event object.
-        """
-        self.app_logic_manager.handle_pick_file()
-
     def send_messages(self, e):
         """
         Handles the event of sending messages.
@@ -308,6 +299,7 @@ class UIComponentManager(ft.UserControl):
         self.app_logic_manager.handle_close_dialog()
 
     def did_mount(self):
+        self.page.overlay.append(self.file_picker)
         self.page.overlay.append(self.saveme)
         self.page.update()
 
@@ -367,7 +359,8 @@ class UIComponentManager(ft.UserControl):
                     # Row 3 with scheduled send button and send button
                     ft.Row(controls=[
                         ft.Row(controls=[
-                                self.btn_schedule_sent,
+                                # Todo Next version with schedule button
+                                #self.btn_schedule_sent,
                                 self.btn_send],
                             expand=1,
                             alignment=ft.MainAxisAlignment.CENTER),
