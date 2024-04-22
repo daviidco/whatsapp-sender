@@ -61,7 +61,7 @@ To package the application for distribution, follow these steps:
 3. Run the following command:
 
 ```bash 
-flet pack app.py --icon src\assets\logo.png --add-data "src\sample.xlsx;."
+flet pack src\app.py --icon src\assets\logo.png --add-data "sample.xlsx;."
 ```
 
 
