@@ -1,6 +1,8 @@
 import sqlite3
 from sqlite3 import Error
 
+from loguru import logger
+
 
 class Database:
     """
@@ -35,8 +37,7 @@ class Database:
             conn = sqlite3.connect(db_file)
             return conn
         except Error as e:
-            # Print the error message if connection fails
-            print(e)
+            logger.exception(f"{str(e)}")
         return conn
 
     def create_table(self, create_table_sql) -> None:
@@ -49,7 +50,7 @@ class Database:
         try:
             self.cursor.execute(create_table_sql)
         except Error as e:
-            print(e)
+            logger.exception(f"{str(e)}")
 
     def close(self) -> None:
         """

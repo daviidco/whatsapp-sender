@@ -1,6 +1,8 @@
 import sqlite3
 from sqlite3 import Error
 
+from loguru import logger
+
 from database.scripts_sql import sql_query_all_templates
 from database.seed_templates import templates
 
@@ -31,7 +33,7 @@ class TemplateRepository:
             count = self.db.cursor.fetchone()[0]
             return count > 0
         except Error as e:
-            print(e)
+            logger.exception(f"{str(e)}")
 
     def insert_templates(self):
         """
@@ -43,7 +45,7 @@ class TemplateRepository:
                 self.db.cursor.execute("INSERT INTO templates (template_name, content) VALUES (?, ?)", template)
             self.db.connection.commit()
         except Error as e:
-            print(e)
+            logger.exception(f"{str(e)}")
 
     def get_templates_db(self):
         try:
@@ -52,7 +54,7 @@ class TemplateRepository:
             templates = cursor.fetchall()
             return templates
         except Error as e:
-            print(e)
+            logger.exception(f"{str(e)}")
 
     def save_template_db(self, template):
         try:
@@ -63,8 +65,8 @@ class TemplateRepository:
             return True
         except sqlite3.IntegrityError as e:
             return False
-        except sqlite3.Error as e:
-            print(e)
+        except Error as e:
+            logger.exception(f"{str(e)}")
             return False
 
     def update_template_db(self, template):
@@ -74,7 +76,7 @@ class TemplateRepository:
             cursor.execute("UPDATE templates SET template_name=?, content=? WHERE id=?", template_tuple)
             self.db.connection.commit()
         except Error as e:
-            print(e)
+            logger.exception(f"{str(e)}")
 
     def delete_template_db(self, template_id):
         try:
@@ -82,4 +84,4 @@ class TemplateRepository:
             cursor.execute("DELETE FROM templates WHERE id=?", (template_id,))
             self.db.connection.commit()
         except Error as e:
-            print(e)
+            logger.exception(f"{str(e)}")

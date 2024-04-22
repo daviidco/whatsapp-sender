@@ -3,6 +3,7 @@ import webbrowser as web
 
 import pyautogui as pg
 import pywhatkit as kit
+from loguru import logger
 
 from service_whatsapp.handle_errors import NotLoggedInException
 
@@ -13,7 +14,7 @@ def check_login_whatsapp() -> None:
 
     Raises: pg.ImageNotFoundException: If the image 'check.png' is not found on the screen.
     """
-    print("Checking WhatsApp login.")
+    logger.info("Checking WhatsApp login.")
     web.open("https://web.whatsapp.com/")
     time.sleep(7)  # Waiting for the page to load completely.
 
@@ -21,19 +22,19 @@ def check_login_whatsapp() -> None:
     try:
         location = pg.locateOnScreen('src/service_whatsapp/check.png')
         if location is None:
-            print("Login successful.")
+            logger.info("Login successful.")
             pg.hotkey('ctrl', 'w')  # Closes the WhatsApp Web page.
-            print("WhatsApp Web page closed.")
+            logger.info("WhatsApp Web page closed.")
             time.sleep(3)
             return
         else:
-            print("Please login to WhatsApp Web.")
+            logger.info("Please login to WhatsApp Web.")
             pg.hotkey('ctrl', 'w')  # Closes the WhatsApp Web page.
             raise NotLoggedInException("Not logged in at WhatsApp Web")
     except pg.ImageNotFoundException:
-        print("Image not found. Assuming login successful.")
-        pg.hotkey('ctrl', 'w')  # Cierra la página de WhatsApp Web
-        print("WhatsApp Web page closed.")
+        logger.exception("Image not found. Assuming login successful.")
+        pg.hotkey('ctrl', 'w')  # Closes the WhatsApp Web page.
+        logger.info("WhatsApp Web page closed")
 
 
 def send_whatsapp_message(phone: str, message: str) -> None:

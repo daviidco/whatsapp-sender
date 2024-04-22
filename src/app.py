@@ -1,4 +1,5 @@
 import flet as ft
+from loguru import logger
 
 from database.conection import Database
 from database.repositories.template_reporitory import TemplateRepository
@@ -14,6 +15,8 @@ def main(page: ft.Page):
     Args:
         page (ft.Page): The page object to display the UI.
     """
+    logger.add("logs/out_{time}.log", retention="1 week")
+
     # Initialize the database
     database = 'whatsapp-sender.db'
     db = Database(database)
@@ -28,8 +31,9 @@ def main(page: ft.Page):
         # Insert templates if they don't exist in the database
         if not template_repository.check_if_templates_exist():
             template_repository.insert_templates()
+        logger.info("Successful Database connection.")
     else:
-        print("Error! Cannot create the database connection.")
+        logger.error("Error! Cannot create the database connection.")
 
     # Set the page title
     page.title = "Whatsapp Sender"

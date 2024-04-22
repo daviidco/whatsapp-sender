@@ -4,6 +4,7 @@ from typing import Optional
 
 import flet as ft
 import pandas as pd
+from loguru import logger
 from simpledt import DataFrame
 
 from pages.constants_style import COLOR_GREEN
@@ -46,13 +47,13 @@ class AppLogicManager:
         try:
             # Attempt to copy the file
             shutil.copy(source_file_path, destination_file_path)
-            print("File copied successfully.")
+            logger.info("File copied successfully.")
         except FileNotFoundError:
-            print("Error: The source file was not found.")
+            logger.error("Error: The source file was not found.")
         except PermissionError:
-            print("Error: Permission denied.")
-        except Exception as ex:
-            print("Error occurred while copying the file.")
+            logger.error("Error: Permission denied.")
+        except Exception:
+            logger.exception("Error occurred while copying the file.")
 
     def handle_pick_file_result(self, e: ft.FilePickerResultEvent):
         """
@@ -115,7 +116,7 @@ class AppLogicManager:
                                                 self.ui_manager.txf_result):
             return
 
-        print("Initializing service send messages...")
+        logger.info("Initializing service send messages...")
 
         try:
             self.ui_manager.df['formatted_message'] = self.ui_manager.df.apply(
@@ -131,18 +132,19 @@ class AppLogicManager:
 
         try:
             check_login_whatsapp()
-            print("Sending messages...")
+            logger.info("Sending messages...")
             messages_sent = 0
 
             for index, recipient in self.ui_manager.df.iterrows():
                 try:
-                    print(f"Messages [{self.ui_manager.df.shape[0]}]...")
+                    logger.info(f"Messages [{self.ui_manager.df.shape[0]}]...")
                     send_whatsapp_message(phone=recipient['numero'],
                                           message=recipient['formatted_message'])
                     messages_sent += 1
-                    print(f"Message {index} sent [Ok]...")
+                    logger.info(f"Message {index} sent [Ok]...")
+
                 except Exception as e:
-                    print(f"Error sending message to {recipient['numero']}: {str(e)}")
+                    logger.exception(f"Error sending message to {recipient['numero']}: {str(e)}")
                     self.ui_manager.txf_result_op.value = f"Error with message to {recipient['numero']}."
                     self.ui_manager.txf_result_op.bgcolor = ft.colors.RED
                     self.ui_manager.txf_result_op.color = ft.colors.WHITE
@@ -153,7 +155,8 @@ class AppLogicManager:
             self.ui_manager.txf_result_op.bgcolor = ft.colors.LIGHT_GREEN
             self.ui_manager.txf_result_op.color = ft.colors.WHITE
             self.ui_manager.update()
-            print("End Service Sent messages... ")
+            logger.info("End Service Sent messages...")
+
 
 
         except NotLoggedInException as e:
@@ -167,7 +170,7 @@ class AppLogicManager:
         """
         Handles saving a new message template.
         """
-        print("New template")
+        logger.info("New template")
         new_template = TemplateInsertSchema(template_name=self.ui_manager.txf_new_template.value,
                                             content=self.ui_manager.txf_area_msg.value)
         success = self.ui_manager.template_repository.save_template_db(new_template)
@@ -196,7 +199,8 @@ class AppLogicManager:
         """
         Handles updating an existing message template.
         """
-        print("Update template")
+        logger.info("Update template")
+
         option = utils.find_option(self.ui_manager.selector_template, self.ui_manager.selector_template.value)
         if option is not None:
             old_template = TemplateUpdateSchema(id=self.ui_manager.selected_template.id,
@@ -204,7 +208,7 @@ class AppLogicManager:
                                                 content=self.ui_manager.txf_area_msg.value)
             self.ui_manager.template_repository.update_template_db(old_template)
 
-            print("Template updated at db")
+            logger.info("Template updated at db")
 
             self.ui_manager.selector_template.options.remove(option)
             self.ui_manager.selector_template.options.append(ft.dropdown.Option(self.ui_manager.txf_new_template.value))
@@ -227,7 +231,7 @@ class AppLogicManager:
         """
         Handles deleting an existing message template.
         """
-        print("Delete template")
+        logger.info("Delete template")
         option = utils.find_option(self.ui_manager.selector_template, self.ui_manager.selector_template.value)
         if option is not None:
             self.ui_manager.template_repository.delete_template_db(self.ui_manager.selected_template.id)
