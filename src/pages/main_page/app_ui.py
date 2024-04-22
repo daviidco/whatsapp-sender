@@ -1,7 +1,7 @@
 import flet as ft
 
-from pages.constants_style import WIDTH_3_COL
 from database.repositories.template_reporitory import TemplateRepository
+from pages.constants_style import WIDTH_3_COL
 from pages.main_page.app_logic import AppLogicManager
 
 

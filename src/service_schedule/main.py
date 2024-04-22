@@ -1,6 +1,5 @@
 import datetime
 import platform
-import os
 
 from loguru import logger
 

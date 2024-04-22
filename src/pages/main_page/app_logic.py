@@ -7,8 +7,8 @@ import pandas as pd
 from loguru import logger
 from simpledt import DataFrame
 
-from pages.constants_style import COLOR_GREEN
 from pages import utils
+from pages.constants_style import COLOR_GREEN
 from pages.handle_errors import DfEmptyException, TemplateEmptyOrNoneException
 from pages.main_page import validations_ui
 from paginated_dt import PaginatedDataTable
