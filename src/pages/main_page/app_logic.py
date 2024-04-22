@@ -12,7 +12,11 @@ from pages import utils
 from pages.handle_errors import DfEmptyException, TemplateEmptyOrNoneException
 from pages.main_page import validations_ui
 from paginated_dt import PaginatedDataTable
-from schemas.templates_schema import TemplateInsertSchema, TemplateUpdateSchema, TemplateSchema
+from schemas.templates_schema import (
+    TemplateInsertSchema,
+    TemplateUpdateSchema,
+    TemplateSchema,
+)
 from service_whatsapp.handle_errors import NotLoggedInException
 from service_whatsapp.main import check_login_whatsapp, send_whatsapp_message
 
@@ -26,17 +30,19 @@ class AppLogicManager:
         Handles the change in the selected dropdown.
         """
         selected_template_name = self.ui_manager.selector_template.value
-        self.ui_manager.selected_template = self.find_template_by_name(selected_template_name)
+        self.ui_manager.selected_template = self.find_template_by_name(
+            selected_template_name
+        )
         if self.ui_manager.selected_template:
             self.update_ui_with_selected_template(self.ui_manager.selected_template)
         else:
-            logger.warning('Template not found')
+            logger.warning("Template not found")
 
     def handle_download_sample(self, e: ft.FilePickerResultEvent):
         """
         Placeholder function for handling downloading samples.
         """
-        relative_source_file_path = 'sample.xlsx'
+        relative_source_file_path = "sample.xlsx"
         destination_file_path = e.path
 
         # Get the path of the directory where the script is located
@@ -45,7 +51,7 @@ class AppLogicManager:
         source_file_path = os.path.join(script_dir, relative_source_file_path)
 
         current_dir = os.getcwd()
-        source_file_path = os.path.join(current_dir, 'sample.xlsx')
+        source_file_path = os.path.join(current_dir, "sample.xlsx")
 
         try:
             # Attempt to copy the file
@@ -71,16 +77,19 @@ class AppLogicManager:
         """
         if e.files:
             file_path = e.files[0].path
-            self.ui_manager.df = pd.read_excel(file_path, dtype={'numero': str})
-            if not validations_ui.check_upload_file(self.ui_manager.df, self.ui_manager.row_table,
-                                                    self.ui_manager.txf_result):
+            self.ui_manager.df = pd.read_excel(file_path, dtype={"numero": str})
+            if not validations_ui.check_upload_file(
+                self.ui_manager.df,
+                self.ui_manager.row_table,
+                self.ui_manager.txf_result,
+            ):
                 return
 
             simpledt_df = DataFrame(self.ui_manager.df)
             pdt = PaginatedDataTable(
                 datatable=simpledt_df.datatable,
                 table_title="Base Uploaded from field",
-                rows_per_page=5
+                rows_per_page=5,
             )
             pdt.datatable.border = ft.border.all(2, "green")
             for index, row in enumerate(pdt.datarows):
@@ -99,19 +108,25 @@ class AppLogicManager:
         """
         Handles sending messages to selected recipients.
         """
-        if not validations_ui.check_selector_template(self.ui_manager.selector_template):
+        if not validations_ui.check_selector_template(
+            self.ui_manager.selector_template
+        ):
             return
 
-        if not validations_ui.check_upload_file(self.ui_manager.df, self.ui_manager.row_table,
-                                                self.ui_manager.txf_result):
+        if not validations_ui.check_upload_file(
+            self.ui_manager.df, self.ui_manager.row_table, self.ui_manager.txf_result
+        ):
             return
 
         logger.info("Initializing service send messages...")
 
         try:
-            self.ui_manager.df['formatted_message'] = self.ui_manager.df.apply(
-                lambda row: utils.format_message(row, self.ui_manager.txf_area_msg.value),
-                axis=1)
+            self.ui_manager.df["formatted_message"] = self.ui_manager.df.apply(
+                lambda row: utils.format_message(
+                    row, self.ui_manager.txf_area_msg.value
+                ),
+                axis=1,
+            )
         except Exception as e:
             error_message = f"Error formatting messages: {e}"
             self.ui_manager.txf_result.value = error_message
@@ -128,26 +143,32 @@ class AppLogicManager:
             for index, recipient in self.ui_manager.df.iterrows():
                 try:
                     logger.info(f"Messages [{self.ui_manager.df.shape[0]}]...")
-                    send_whatsapp_message(phone=recipient['numero'],
-                                          message=recipient['formatted_message'])
+                    send_whatsapp_message(
+                        phone=recipient["numero"],
+                        message=recipient["formatted_message"],
+                    )
                     messages_sent += 1
                     logger.info(f"Message {index} sent [Ok]...")
 
                 except Exception as e:
-                    logger.exception(f"Error sending message to {recipient['numero']}: {str(e)}")
-                    self.ui_manager.txf_result_op.value = f"Error with message to {recipient['numero']}."
+                    logger.exception(
+                        f"Error sending message to {recipient['numero']}: {str(e)}"
+                    )
+                    self.ui_manager.txf_result_op.value = (
+                        f"Error with message to {recipient['numero']}."
+                    )
                     self.ui_manager.txf_result_op.bgcolor = ft.colors.RED
                     self.ui_manager.txf_result_op.color = ft.colors.WHITE
                     self.ui_manager.update()
                     return
 
-            self.ui_manager.txf_result_op.value = f"Messages sent successfully. [{messages_sent}]"
+            self.ui_manager.txf_result_op.value = (
+                f"Messages sent successfully. [{messages_sent}]"
+            )
             self.ui_manager.txf_result_op.bgcolor = ft.colors.LIGHT_GREEN
             self.ui_manager.txf_result_op.color = ft.colors.WHITE
             self.ui_manager.update()
             logger.info("End Service Sent messages...")
-
-
 
         except NotLoggedInException as e:
             error_message = "Error trying sent messages. Please verify you are logged in at https://web.whatsapp.com"
@@ -161,19 +182,29 @@ class AppLogicManager:
         Handles saving a new message template.
         """
         logger.info("New template")
-        new_template = TemplateInsertSchema(template_name=self.ui_manager.txf_new_template.value,
-                                            content=self.ui_manager.txf_area_msg.value)
+        new_template = TemplateInsertSchema(
+            template_name=self.ui_manager.txf_new_template.value,
+            content=self.ui_manager.txf_area_msg.value,
+        )
         success = self.ui_manager.template_repository.save_template_db(new_template)
 
         if success:
-            self.ui_manager.selector_template.options.append(ft.dropdown.Option(self.ui_manager.txf_new_template.value))
-            self.ui_manager.selector_template.value = self.ui_manager.txf_new_template.value
+            self.ui_manager.selector_template.options.append(
+                ft.dropdown.Option(self.ui_manager.txf_new_template.value)
+            )
+            self.ui_manager.selector_template.value = (
+                self.ui_manager.txf_new_template.value
+            )
             self.ui_manager.update()
-            self.ui_manager.templates = self.ui_manager.template_repository.get_templates_db()
+            self.ui_manager.templates = (
+                self.ui_manager.template_repository.get_templates_db()
+            )
             self.handle_dropdown_changed()
         else:
             # Handle the case where the template name already exists
-            self.ui_manager.txf_new_template.error_text = "Name template exists. Please change it."
+            self.ui_manager.txf_new_template.error_text = (
+                "Name template exists. Please change it."
+            )
             self.ui_manager.update()
 
     def handle_open_edit_dialog(self):
@@ -191,20 +222,30 @@ class AppLogicManager:
         """
         logger.info("Update template")
 
-        option = utils.find_option(self.ui_manager.selector_template, self.ui_manager.selector_template.value)
+        option = utils.find_option(
+            self.ui_manager.selector_template, self.ui_manager.selector_template.value
+        )
         if option is not None:
-            old_template = TemplateUpdateSchema(id=self.ui_manager.selected_template.id,
-                                                template_name=self.ui_manager.txf_new_template.value,
-                                                content=self.ui_manager.txf_area_msg.value)
+            old_template = TemplateUpdateSchema(
+                id=self.ui_manager.selected_template.id,
+                template_name=self.ui_manager.txf_new_template.value,
+                content=self.ui_manager.txf_area_msg.value,
+            )
             self.ui_manager.template_repository.update_template_db(old_template)
 
             logger.info("Template updated at db")
 
             self.ui_manager.selector_template.options.remove(option)
-            self.ui_manager.selector_template.options.append(ft.dropdown.Option(self.ui_manager.txf_new_template.value))
-            self.ui_manager.selector_template.value = self.ui_manager.txf_new_template.value
+            self.ui_manager.selector_template.options.append(
+                ft.dropdown.Option(self.ui_manager.txf_new_template.value)
+            )
+            self.ui_manager.selector_template.value = (
+                self.ui_manager.txf_new_template.value
+            )
             self.ui_manager.update()
-            self.ui_manager.templates = self.ui_manager.template_repository.get_templates_db()
+            self.ui_manager.templates = (
+                self.ui_manager.template_repository.get_templates_db()
+            )
             self.handle_dropdown_changed()
         self.handle_close_dialog()
 
@@ -222,13 +263,21 @@ class AppLogicManager:
         Handles deleting an existing message template.
         """
         logger.info("Delete template")
-        option = utils.find_option(self.ui_manager.selector_template, self.ui_manager.selector_template.value)
+        option = utils.find_option(
+            self.ui_manager.selector_template, self.ui_manager.selector_template.value
+        )
         if option is not None:
-            self.ui_manager.template_repository.delete_template_db(self.ui_manager.selected_template.id)
+            self.ui_manager.template_repository.delete_template_db(
+                self.ui_manager.selected_template.id
+            )
             self.ui_manager.selector_template.options.remove(option)
-            self.reset_template_fields([self.ui_manager.txf_area_msg,
-                                        self.ui_manager.txf_new_template,
-                                        self.ui_manager.selector_template])
+            self.reset_template_fields(
+                [
+                    self.ui_manager.txf_area_msg,
+                    self.ui_manager.txf_new_template,
+                    self.ui_manager.selector_template,
+                ]
+            )
             self.ui_manager.update()
         self.handle_close_dialog()
 
@@ -236,13 +285,17 @@ class AppLogicManager:
         """
         Handles opening the preview dialog for the selected template.
         """
-        if not validations_ui.check_selector_template(self.ui_manager.selector_template):
+        if not validations_ui.check_selector_template(
+            self.ui_manager.selector_template
+        ):
             return
-        if not validations_ui.check_upload_file(self.ui_manager.df, self.ui_manager.row_table,
-                                                self.ui_manager.txf_result):
+        if not validations_ui.check_upload_file(
+            self.ui_manager.df, self.ui_manager.row_table, self.ui_manager.txf_result
+        ):
             return
-        if not validations_ui.check_df_uploaded(self.ui_manager.df, self.ui_manager.row_table,
-                                                self.ui_manager.txf_result):
+        if not validations_ui.check_df_uploaded(
+            self.ui_manager.df, self.ui_manager.row_table, self.ui_manager.txf_result
+        ):
             return
         message_formatted = self.generate_preview_template()
         self.ui_manager.confirm_preview_dialog.content.value = message_formatted
@@ -274,10 +327,17 @@ class AppLogicManager:
 
         """
         template = next(
-            (template for template in self.ui_manager.templates if template[1] == template_name),
-            None)
+            (
+                template
+                for template in self.ui_manager.templates
+                if template[1] == template_name
+            ),
+            None,
+        )
         if template is not None:
-            template_result = TemplateSchema(id=template[0], template_name=template[1], content=template[2])
+            template_result = TemplateSchema(
+                id=template[0], template_name=template[1], content=template[2]
+            )
             return template_result
         else:
             return None
@@ -304,7 +364,9 @@ class AppLogicManager:
             str: The formatted preview message.
         """
         try:
-            message_formatted = utils.format_preview_message(self.ui_manager.txf_area_msg.value, self.ui_manager.df)
+            message_formatted = utils.format_preview_message(
+                self.ui_manager.txf_area_msg.value, self.ui_manager.df
+            )
             return message_formatted
         except (DfEmptyException, TemplateEmptyOrNoneException) as e:
             self.ui_manager.txf_result.value = "The file is empty."

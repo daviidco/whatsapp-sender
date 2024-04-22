@@ -7,7 +7,9 @@ import pandas as pd
 from pages.handle_errors import DfEmptyException, TemplateEmptyOrNoneException
 
 
-def find_option(selector: ft.Dropdown, option_name: str) -> Optional[ft.dropdown.Option]:
+def find_option(
+    selector: ft.Dropdown, option_name: str
+) -> Optional[ft.dropdown.Option]:
 
     for option in selector.options:
         if option_name == option.key:
@@ -46,16 +48,16 @@ def format_message_base(original_message: str, data: pd.Series):
         raise TemplateEmptyOrNoneException("Template empty.")
 
     result = original_message
-    placeholders = re.findall(r'\{([^}]+)\}', original_message)
+    placeholders = re.findall(r"\{([^}]+)\}", original_message)
     variable_names = [var.strip() for var in placeholders]
     for var_name in variable_names:
         if var_name in data.index:
             var_value = data[var_name]
-            result = result.replace('{' + var_name + '}', str(var_value))
+            result = result.replace("{" + var_name + "}", str(var_value))
         else:
             if var_name in data.index:
                 var_value = data[var_name]
-                result = result.replace('{' + var_name + '}', str(var_value))
+                result = result.replace("{" + var_name + "}", str(var_value))
     return result
 
 

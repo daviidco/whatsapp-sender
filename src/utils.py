@@ -5,11 +5,13 @@ import pandas as pd
 
 class DfEmptyException(Exception):
     """Exception raised when the DataFrame is empty or not uploaded."""
+
     pass
 
 
 class TemplateEmptyOrNoneException(Exception):
     """Exception raised when the template is empty or None."""
+
     pass
 
 
@@ -44,14 +46,14 @@ def format_message_base(original_message: str, data: pd.Series or pd.DataFrame):
         raise TemplateEmptyOrNoneException("Template empty.")
 
     result = original_message
-    placeholders = re.findall(r'\{([^}]+)\}', original_message)
+    placeholders = re.findall(r"\{([^}]+)\}", original_message)
     variable_names = [var.strip() for var in placeholders]
     for var_name in variable_names:
         if isinstance(data, pd.DataFrame):
             var_value = data.loc[0, var_name]
         else:  # Asume que data es una serie (fila del DataFrame)
             var_value = data[var_name]
-        result: str = result.replace('{' + var_name + '}', str(var_value))
+        result: str = result.replace("{" + var_name + "}", str(var_value))
     return result
 
 

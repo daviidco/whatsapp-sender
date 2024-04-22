@@ -59,13 +59,10 @@ class UIComponentManager(ft.UserControl):
             min_lines=10000,
             max_lines=10000,
             bgcolor="#005B4A",
-            border_radius=20
+            border_radius=20,
         )
 
-        self.txf_new_template = ft.TextField(
-            label="Name Template",
-            width=WIDTH_3_COL
-        )
+        self.txf_new_template = ft.TextField(label="Name Template", width=WIDTH_3_COL)
 
         self.txf_result = ft.TextField(
             read_only=True,
@@ -86,10 +83,10 @@ class UIComponentManager(ft.UserControl):
                 icon_color=ft.colors.BLACK,
                 icon_size=35,
                 tooltip="Sent messages",
-                on_click=self.send_messages
+                on_click=self.send_messages,
             ),
             bgcolor=ft.colors.GREEN,
-            radius=25
+            radius=25,
         )
 
         self.btn_schedule_sent = ft.CircleAvatar(
@@ -98,10 +95,10 @@ class UIComponentManager(ft.UserControl):
                 icon_color=ft.colors.BLACK,
                 icon_size=35,
                 tooltip="Schedule sent messages",
-                on_click=self.send_messages
+                on_click=self.send_messages,
             ),
             bgcolor=ft.colors.GREEN_ACCENT_100,
-            radius=25
+            radius=25,
         )
 
         self.btn_new_template = ft.IconButton(
@@ -125,14 +122,14 @@ class UIComponentManager(ft.UserControl):
             icon_color=ft.colors.RED,
             tooltip="Delete current template",
             on_click=self.open_delete_dialog,
-            opacity=40
+            opacity=40,
         )
 
         self.btn_prev_template = ft.IconButton(
             icon=ft.icons.REMOVE_RED_EYE_ROUNDED,
             icon_color=ft.colors.AMBER_100,
             tooltip="Preview template with the first row from base",
-            on_click=self.open_preview_dialog
+            on_click=self.open_preview_dialog,
         )
 
     def create_dropdown(self) -> None:
@@ -152,13 +149,17 @@ class UIComponentManager(ft.UserControl):
         """
         Creates the buttons for the application.
         """
-        self.btn_download_sample = ft.ElevatedButton(text="Download Sample",
-                                                     icon="DOWNLOAD_FOR_OFFLINE",
-                                                     on_click=lambda _: self.saveme.save_file(file_name="sample.xlsx"))
+        self.btn_download_sample = ft.ElevatedButton(
+            text="Download Sample",
+            icon="DOWNLOAD_FOR_OFFLINE",
+            on_click=lambda _: self.saveme.save_file(file_name="sample.xlsx"),
+        )
         self.btn_select_base = ft.ElevatedButton(
             text="Choose the base to send",
             icon=ft.icons.UPLOAD_FILE,
-            on_click=lambda _: self.file_picker.pick_files(allow_multiple=False, allowed_extensions=["xlsx"])
+            on_click=lambda _: self.file_picker.pick_files(
+                allow_multiple=False, allowed_extensions=["xlsx"]
+            ),
         )
 
     def create_dialogs(self) -> None:
@@ -200,7 +201,6 @@ class UIComponentManager(ft.UserControl):
             bgcolor="#005B4A",
             actions_alignment=ft.MainAxisAlignment.END,
             on_dismiss=self.close_dialog,
-
         )
 
     # UI Methods
@@ -325,53 +325,72 @@ class UIComponentManager(ft.UserControl):
                             self.btn_select_base,
                             ft.Container(content=self.selector_template),
                         ],
-                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                     ),
                     # Row 2 with result text field and table view
                     ft.Row(
                         controls=[
-                            ft.Column(controls=[self.txf_result,
-                                                ft.ListView(controls=[self.row_table])], expand=1),
-
+                            ft.Column(
+                                controls=[
+                                    self.txf_result,
+                                    ft.ListView(controls=[self.row_table]),
+                                ],
+                                expand=1,
+                            ),
                             # Column with message field, new template field, and template control buttons
                             ft.Column(
                                 controls=[
-                                    ft.Row(controls=[ft.Container(content=self.txf_area_msg), ]),
-                                    ft.Row(controls=[self.txf_new_template, ]),
-                                    ft.Row(controls=[
-                                        ft.Container(
-                                            content=ft.Row(
-                                                controls=[
-                                                    self.btn_edit_template,
-                                                    self.btn_del_template,
-                                                    self.btn_prev_template,
-                                                    self.btn_new_template,
-                                                ],
-                                                alignment=ft.MainAxisAlignment.SPACE_EVENLY
-                                            ), width=WIDTH_3_COL, )],
-
-                                    )
+                                    ft.Row(
+                                        controls=[
+                                            ft.Container(content=self.txf_area_msg),
+                                        ]
+                                    ),
+                                    ft.Row(
+                                        controls=[
+                                            self.txf_new_template,
+                                        ]
+                                    ),
+                                    ft.Row(
+                                        controls=[
+                                            ft.Container(
+                                                content=ft.Row(
+                                                    controls=[
+                                                        self.btn_edit_template,
+                                                        self.btn_del_template,
+                                                        self.btn_prev_template,
+                                                        self.btn_new_template,
+                                                    ],
+                                                    alignment=ft.MainAxisAlignment.SPACE_EVENLY,
+                                                ),
+                                                width=WIDTH_3_COL,
+                                            )
+                                        ],
+                                    ),
                                 ]
-                            )
+                            ),
                         ],
                         height=500,  # Set a fixed height for the row
                     ),
                     # Row 3 with scheduled send button and send button
-                    ft.Row(controls=[
-                        ft.Row(controls=[
-                                # Todo Next version with schedule button
-                                #self.btn_schedule_sent,
-                                self.btn_send],
-                            expand=1,
-                            alignment=ft.MainAxisAlignment.CENTER),
-                        ft.Container(
-                                content=ft.Row(controls=[
-                                    self.txf_result_op],
-                                alignment=ft.MainAxisAlignment.END,
-                            )
-                        )
-                    ],
-                    )
+                    ft.Row(
+                        controls=[
+                            ft.Row(
+                                controls=[
+                                    # Todo Next version with schedule button
+                                    # self.btn_schedule_sent,
+                                    self.btn_send
+                                ],
+                                expand=1,
+                                alignment=ft.MainAxisAlignment.CENTER,
+                            ),
+                            ft.Container(
+                                content=ft.Row(
+                                    controls=[self.txf_result_op],
+                                    alignment=ft.MainAxisAlignment.END,
+                                )
+                            ),
+                        ],
+                    ),
                 ],
             ),
         )

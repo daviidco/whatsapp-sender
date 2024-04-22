@@ -42,7 +42,10 @@ class TemplateRepository:
         """
         try:
             for template in templates:
-                self.db.cursor.execute("INSERT INTO templates (template_name, content) VALUES (?, ?)", template)
+                self.db.cursor.execute(
+                    "INSERT INTO templates (template_name, content) VALUES (?, ?)",
+                    template,
+                )
             self.db.connection.commit()
         except Error as e:
             logger.exception(f"{str(e)}")
@@ -60,7 +63,10 @@ class TemplateRepository:
         try:
             cursor = self.db.cursor
             template_tuple = (template.template_name, template.content)
-            cursor.execute("INSERT INTO templates (template_name, content) VALUES (?, ?)", template_tuple)
+            cursor.execute(
+                "INSERT INTO templates (template_name, content) VALUES (?, ?)",
+                template_tuple,
+            )
             self.db.connection.commit()
             return True
         except sqlite3.IntegrityError as e:
@@ -73,7 +79,10 @@ class TemplateRepository:
         try:
             cursor = self.db.cursor
             template_tuple = (template.template_name, template.content, template.id)
-            cursor.execute("UPDATE templates SET template_name=?, content=? WHERE id=?", template_tuple)
+            cursor.execute(
+                "UPDATE templates SET template_name=?, content=? WHERE id=?",
+                template_tuple,
+            )
             self.db.connection.commit()
         except Error as e:
             logger.exception(f"{str(e)}")

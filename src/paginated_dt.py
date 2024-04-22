@@ -25,10 +25,10 @@ class PaginatedDataTable(ft.UserControl):
     DEFAULT_ROW_PER_PAGE = 5
 
     def __init__(
-            self,
-            datatable: ft.DataTable,
-            table_title: str = "Default Title",
-            rows_per_page: int = DEFAULT_ROW_PER_PAGE,
+        self,
+        datatable: ft.DataTable,
+        table_title: str = "Default Title",
+        rows_per_page: int = DEFAULT_ROW_PER_PAGE,
     ):
         """
         A customized user control which returns a paginated data table. It offers the possibility to organize data
@@ -56,7 +56,7 @@ class PaginatedDataTable(ft.UserControl):
         self.v_current_page = ft.Text(
             str(self.current_page),
             tooltip="Double click to set current page.",
-            weight=ft.FontWeight.BOLD
+            weight=ft.FontWeight.BOLD,
         )
 
         # textfield to go to a particular page
@@ -69,12 +69,14 @@ class PaginatedDataTable(ft.UserControl):
             visible=False,
             keyboard_type=ft.KeyboardType.NUMBER,
             content_padding=2,
-            text_align=ft.TextAlign.CENTER
+            text_align=ft.TextAlign.CENTER,
         )
 
         # gesture detector to detect double taps of its contents
         self.gd = ft.GestureDetector(
-            content=ft.Row(controls=[self.v_current_page, self.current_page_changer_field]),
+            content=ft.Row(
+                controls=[self.v_current_page, self.current_page_changer_field]
+            ),
             on_double_tap=self.on_double_tap_page_changer,
         )
 
@@ -87,16 +89,13 @@ class PaginatedDataTable(ft.UserControl):
             on_submit=lambda e: self.set_rows_per_page(e.control.value),
             keyboard_type=ft.KeyboardType.NUMBER,
             content_padding=2,
-            text_align=ft.TextAlign.CENTER
+            text_align=ft.TextAlign.CENTER,
         )
 
         # will display the number of rows in the table
         self.v_count = ft.Text(weight=ft.FontWeight.BOLD)
 
-        self.pdt = ft.DataTable(
-            columns=self.dt.columns,
-            rows=self.build_rows()
-        )
+        self.pdt = ft.DataTable(columns=self.dt.columns, rows=self.build_rows())
 
     @property
     def datatable(self) -> ft.DataTable:
@@ -121,9 +120,11 @@ class PaginatedDataTable(ft.UserControl):
         :raise ValueError
         """
         try:
-            self.rows_per_page = int(new_row_per_page) \
-                if 1 <= int(new_row_per_page) <= self.num_rows \
+            self.rows_per_page = (
+                int(new_row_per_page)
+                if 1 <= int(new_row_per_page) <= self.num_rows
                 else self.DEFAULT_ROW_PER_PAGE
+            )
         except ValueError:
             # if an error occurs set to default
             self.rows_per_page = self.DEFAULT_ROW_PER_PAGE
@@ -208,37 +209,38 @@ class PaginatedDataTable(ft.UserControl):
                                         ft.IconButton(
                                             ft.icons.KEYBOARD_DOUBLE_ARROW_LEFT,
                                             on_click=self.goto_first_page,
-                                            tooltip="First Page"
+                                            tooltip="First Page",
                                         ),
                                         ft.IconButton(
                                             ft.icons.KEYBOARD_ARROW_LEFT,
                                             on_click=self.prev_page,
-                                            tooltip="Previous Page"
+                                            tooltip="Previous Page",
                                         ),
                                         self.gd,
                                         ft.IconButton(
                                             ft.icons.KEYBOARD_ARROW_RIGHT,
                                             on_click=self.next_page,
-                                            tooltip="Next Page"
+                                            tooltip="Next Page",
                                         ),
                                         ft.IconButton(
                                             ft.icons.KEYBOARD_DOUBLE_ARROW_RIGHT,
                                             on_click=self.goto_last_page,
-                                            tooltip="Last Page"
+                                            tooltip="Last Page",
                                         ),
                                     ]
                                 ),
                                 ft.Row(
                                     controls=[
-                                        self.v_num_of_row_changer_field, ft.Text("rows per page")
+                                        self.v_num_of_row_changer_field,
+                                        ft.Text("rows per page"),
                                     ]
                                 ),
                                 self.v_count,
                             ],
-                            alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+                            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                         ),
                     ],
-                    scroll=ft.ScrollMode.AUTO
+                    scroll=ft.ScrollMode.AUTO,
                 ),
                 padding=10,
             ),
@@ -252,7 +254,9 @@ class PaginatedDataTable(ft.UserControl):
         """
         self.current_page_changer_field.value = str(self.current_page)
         self.v_current_page.visible = not self.v_current_page.visible
-        self.current_page_changer_field.visible = not self.current_page_changer_field.visible
+        self.current_page_changer_field.visible = (
+            not self.current_page_changer_field.visible
+        )
         self.update()
 
     def refresh_data(self):

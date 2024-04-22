@@ -3,8 +3,11 @@ from loguru import logger
 
 from database.conection import Database
 from database.repositories.template_reporitory import TemplateRepository
-from database.scripts_sql import sql_create_templates_table, sql_create_sent_messages_table, \
-    sql_create_scheduled_messages_table
+from database.scripts_sql import (
+    sql_create_templates_table,
+    sql_create_sent_messages_table,
+    sql_create_scheduled_messages_table,
+)
 from pages.main_page.app_ui import UIComponentManager
 
 
@@ -18,7 +21,7 @@ def main(page: ft.Page):
     logger.add("logs/out_{time}.log", retention="1 week")
 
     # Initialize the database
-    database = 'whatsapp-sender.db'
+    database = "whatsapp-sender.db"
     db = Database(database)
     template_repository = TemplateRepository(db)
 
@@ -37,7 +40,6 @@ def main(page: ft.Page):
 
     # Set the page title
     page.title = "Whatsapp Sender"
-    #page.bgcolor = ft.colors.BLACK
     page.theme_mode = ft.ThemeMode.DARK
 
     # Initialize the UI component manager and add it to the page

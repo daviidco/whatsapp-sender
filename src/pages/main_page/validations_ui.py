@@ -78,7 +78,9 @@ def check_upload_file(df: DataFrame, row_table, txf_result) -> bool:
     """
     if df is None or df.empty:
         row_table.controls.clear()
-        txf_result.value = "Please upload the base file." if df is None else "The file is empty."
+        txf_result.value = (
+            "Please upload the base file." if df is None else "The file is empty."
+        )
         txf_result.bgcolor = ft.colors.RED
         txf_result.color = ft.colors.WHITE
         row_table.update()
