@@ -30,7 +30,7 @@ class AppLogicManager:
         if self.ui_manager.selected_template:
             self.update_ui_with_selected_template(self.ui_manager.selected_template)
         else:
-            print("Template not found")
+            logger.warning('Template not found')
 
     def handle_download_sample(self, e: ft.FilePickerResultEvent):
         """
